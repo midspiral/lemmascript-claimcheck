@@ -18,8 +18,8 @@ It orchestrates two CLIs: it shells `lsc extract` (LemmaScript's frontend, now c
 ## Install
 
 ```sh
-npm install -g lemmascript-claimcheck
-npm install -g lemmascript claimcheck   # the two tools it drives (peer prerequisites)
+# the tool, plus the two CLIs it drives (lsc + claimcheck) — all on your PATH
+npm install -g lemmascript-claimcheck lemmascript claimcheck
 ```
 
 It needs `lemmascript >= 0.5.7` (introduces the `//@ contract` annotation) and `claimcheck >= 0.5.0` (the `--lang` framing) — declared as `peerDependencies`, so npm warns on a version mismatch.
