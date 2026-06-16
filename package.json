@@ -1,6 +1,29 @@
 {
   "name": "lemmascript-claimcheck",
   "version": "0.1.0",
+  "description": "claimcheck for LemmaScript: vet that a function's informal //@ contract faithfully describes its verified //@ requires/ensures, and emit a guarantees report.",
+  "keywords": [
+    "lemmascript",
+    "claimcheck",
+    "formal-verification",
+    "verification",
+    "verified",
+    "typescript",
+    "specification",
+    "design-by-contract",
+    "natural-language",
+    "round-trip",
+    "llm",
+    "intent"
+  ],
+  "license": "MIT",
+  "author": "midspiral <hello@midspiral.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/midspiral/lemmascript-claimcheck.git"
+  },
+  "homepage": "https://github.com/midspiral/lemmascript-claimcheck#readme",
+  "bugs": "https://github.com/midspiral/lemmascript-claimcheck/issues",
   "private": true,
   "type": "module",
   "bin": {
