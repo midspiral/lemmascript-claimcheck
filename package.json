@@ -1,6 +1,6 @@
 {
   "name": "lemmascript-claimcheck",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "claimcheck for LemmaScript: vet that a function's informal //@ contract faithfully describes its verified //@ requires/ensures, and emit a guarantees report.",
   "keywords": [
     "lemmascript",
