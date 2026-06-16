@@ -24,17 +24,28 @@
   },
   "homepage": "https://github.com/midspiral/lemmascript-claimcheck#readme",
   "bugs": "https://github.com/midspiral/lemmascript-claimcheck/issues",
-  "private": true,
   "type": "module",
   "bin": {
-    "lemmascript-claimcheck": "src/cli.ts"
+    "lemmascript-claimcheck": "dist/cli.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "DESIGN.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
     "tsx": "^4.22.4",
     "typescript": "^5.7.0"
+  },
+  "peerDependencies": {
+    "claimcheck": ">=0.5.0",
+    "lemmascript": ">=0.5.7"
   }
 }

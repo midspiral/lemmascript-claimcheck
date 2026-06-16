@@ -11,15 +11,23 @@ LemmaScript proves the formal spec; it can't prove the spec *means* what you thi
 export function clamp(x: number, lo: number, hi: number): number { ... }
 ```
 
-`lemmascript-claimcheck` informalizes the `requires`/`ensures` **blind** (without seeing the `//@ contract`) via the sibling [claimcheck](https://github.com/metareflection/claimcheck) round-trip, then compares the back-translation to the contract. A mismatch means your proof guarantees something other than what your prose advertises — or vice versa.
+`lemmascript-claimcheck` informalizes the `requires`/`ensures` **blind** (without seeing the `//@ contract`) via the [claimcheck](https://github.com/metareflection/claimcheck) round-trip, then compares the back-translation to the contract. A mismatch means your proof guarantees something other than what your prose advertises — or vice versa.
 
-It is a downstream consumer of LemmaScript's frontend, like other plugins: it shells the public `lsc extract` for the Raw IR (now carrying `//@ contract` strings) and shells `claimcheck --stdin` for the round-trip. Expects sibling `../LemmaScript` and `../claimcheck` checkouts (or `$LEMMASCRIPT`, `$CLAIMCHECK`).
+It orchestrates two CLIs: it shells `lsc extract` (LemmaScript's frontend, now carrying `//@ contract` strings) for the Raw IR, and `claimcheck --stdin` for the round-trip. Both are expected on your `PATH`.
+
+## Install
+
+```sh
+npm install -g lemmascript-claimcheck
+npm install -g lemmascript claimcheck   # the two tools it drives (peer prerequisites)
+```
+
+It needs `lemmascript >= 0.5.7` (introduces the `//@ contract` annotation) and `claimcheck >= 0.5.0` (the `--lang` framing) — declared as `peerDependencies`, so npm warns on a version mismatch.
 
 ## Usage
 
 ```sh
-npm install
-npx tsx src/cli.ts examples/demo.ts --bedrock
+lemmascript-claimcheck examples/demo.ts --bedrock
 ```
 
 For `domain.ts` this writes `domain.guarantees.json` and `domain.guarantees.md` next to the source: a trust manifest of what the module promises in English, each promise vetted against its spec, with disputed and unbacked claims flagged.
@@ -38,7 +46,7 @@ The backend and models are claimcheck's concern — pick any setup it supports a
 
 | Layer | What | Example |
 |-------|------|---------|
-| `$CLAIMCHECK` | which binary | a dev checkout's `bin/claimcheck.js` (run via node), else global `claimcheck` |
+| `$CLAIMCHECK` | which claimcheck to run | default: `claimcheck` on PATH; or a dev checkout's `bin/claimcheck.js` (run via node) |
 | `$CLAIMCHECK_ARGS` | persistent default flags | `export CLAIMCHECK_ARGS="--bedrock"` |
 | CLI passthrough | per-run flags (override the default) | `... examples/demo.ts --claude-code` |
 
@@ -59,3 +67,20 @@ Verification itself is **assumed** (run `lsc check` to discharge the proofs); th
 ## Example
 
 `examples/demo.ts` carries one faithful contract (`clamp`), one that over-claims against a weakened spec (`largest`), and one unbacked claim (`double`) — exercising all three verdicts.
+
+## Development
+
+```sh
+git clone https://github.com/midspiral/lemmascript-claimcheck && cd lemmascript-claimcheck
+npm install
+npm run build        # tsc → dist/
+```
+
+To run against local checkouts instead of the published tools, point the env overrides at them:
+
+```sh
+LEMMASCRIPT=../LemmaScript CLAIMCHECK=../claimcheck/bin/claimcheck.js \
+  node dist/cli.js examples/demo.ts --bedrock
+```
+
+`$LEMMASCRIPT` runs the checkout's `lsc` source through `tsx`; `$CLAIMCHECK` points at a checkout's `bin/claimcheck.js`.

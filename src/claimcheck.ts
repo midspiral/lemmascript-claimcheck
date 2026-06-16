@@ -1,13 +1,14 @@
-// Shell the sibling `claimcheck --stdin` for the blind round-trip. The backend
-// and models are claimcheck's own concern — we just forward flags, so any setup
-// works (direct API, --bedrock, --vertex, the in-claimcheck --claude-code,
-// --model/--compare-model/--informalize-model, --single-prompt, ...).
+// Shell `claimcheck --stdin` for the blind round-trip. The backend and models are
+// claimcheck's concern — we just forward flags, so any setup works (direct API,
+// --bedrock, --vertex, the in-claimcheck --claude-code, --model/--compare-model,
+// --single-prompt, ...).
 //
 // Configuration, lowest to highest precedence:
-//   $CLAIMCHECK       which binary: a command on PATH, or a path to a dev
-//                     checkout's bin/claimcheck.js (run via node). Default: `claimcheck`.
-//   $CLAIMCHECK_ARGS  default flags, space-separated (a project's persistent backend
-//                     choice, e.g. "--bedrock" or "--claude-code").
+//   (default)         shell `claimcheck` from PATH (install with `npm i -g claimcheck`).
+//   $CLAIMCHECK       override: a command on PATH, or a path to a dev checkout's
+//                     bin/claimcheck.js (run via node).
+//   $CLAIMCHECK_ARGS  default flags, space-separated (a project's persistent
+//                     backend choice, e.g. "--bedrock" or "--claude-code").
 //   passthrough       per-invocation flags from the CLI (override the env default).
 import { execFileSync } from "child_process";
 
@@ -40,8 +41,8 @@ export interface Claim {
 
 function resolveCmd(): { cmd: string; pre: string[] } {
   const env = process.env.CLAIMCHECK;
-  if (!env) return { cmd: "claimcheck", pre: [] };
-  return env.endsWith(".js") ? { cmd: "node", pre: [env] } : { cmd: env, pre: [] };
+  if (env) return env.endsWith(".js") ? { cmd: "node", pre: [env] } : { cmd: env, pre: [] };
+  return { cmd: "claimcheck", pre: [] };
 }
 
 /** `--lang lemmascript` (the formal side is a function contract, not a Dafny lemma),

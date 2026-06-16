@@ -38,7 +38,7 @@
       },
       "status": "disputed",
       "weakeningType": "weakened-postcondition",
-      "discrepancy": "The requirement says the function returns the LARGER of a and b, meaning the result must be >= a AND >= b (i.e., result = max(a, b)). The contract only ensures result >= a, completely omitting the constraint that result >= b. A value could satisfy the postcondition while being less than b, meaning it is not necessarily the larger of the two values.",
+      "discrepancy": "The requirement says the function returns the LARGER of a and b, meaning the result must be >= a AND >= b (i.e., it is the maximum of the two). The contract only ensures result >= a, completely omitting the condition result >= b. A value could satisfy the contract while being less than b, which would not be the larger of the two values.",
       "backTranslation": "The largest function takes two numbers (a, b) and returns a number that is greater than or equal to a."
     }
   ],

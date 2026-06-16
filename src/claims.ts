@@ -3,7 +3,7 @@
 //   lemmaName   = the function name
 //   dafnyCode   = a synthesized contract block (signature + requires + ensures)
 // A contract with no requires/ensures has nothing formal behind it → a gap.
-import type { RawModule, RawFunction } from "../../LemmaScript/tools/src/rawir.js";
+import type { RawModule, RawFunction } from "./ir.js";
 
 export interface SpecView {
   signature: string;
@@ -44,8 +44,9 @@ export function collectClaims(mod: RawModule): { backed: BackedClaim[]; gaps: Ga
   const backed: BackedClaim[] = [];
   const gaps: Gap[] = [];
   for (const fn of mod.functions) {
-    if (fn.contract.length === 0) continue;
-    const requirement = fn.contract.join(" ");
+    const contract = fn.contract ?? [];
+    if (contract.length === 0) continue;
+    const requirement = contract.join(" ");
     if (fn.requires.length === 0 && fn.ensures.length === 0) {
       gaps.push({
         specId: fn.name,

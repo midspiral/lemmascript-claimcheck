@@ -1,4 +1,4 @@
-#!/usr/bin/env -S npx tsx
+#!/usr/bin/env node
 // lemmascript-claimcheck — vet that each `//@ contract` faithfully describes the
 // function's formal `//@ requires`/`//@ ensures`, then emit a guarantees report.
 //

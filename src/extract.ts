@@ -1,24 +1,25 @@
-// Raw IR via the sibling LemmaScript's public `lsc extract` CLI — the same seam
-// lemmascript-guard uses: a type-only import for the shape, the values over a
-// subprocess. The `//@ contract` strings ride along on each RawFunction.
+// Raw IR via LemmaScript's public `lsc extract`. By default we shell `lsc` from
+// PATH (install with `npm i -g lemmascript`); set $LEMMASCRIPT to a sibling
+// checkout to run its source through tsx instead (dev). The `//@ contract`
+// strings ride along on each function (lemmascript >= 0.5.7).
 import { execFileSync } from "child_process";
-import { existsSync } from "fs";
 import * as path from "path";
-import { fileURLToPath } from "url";
-import type { RawModule } from "../../LemmaScript/tools/src/rawir.js";
+import type { RawModule } from "./ir.js";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const LS = process.env.LEMMASCRIPT ?? path.resolve(here, "../../LemmaScript");
-const LSC = path.join(LS, "tools", "src", "lsc.ts");
+function lscInvocation(): { cmd: string; pre: string[] } {
+  const env = process.env.LEMMASCRIPT;
+  if (env) {
+    const lsc = path.join(env, "tools", "src", "lsc.ts");
+    return { cmd: "npx", pre: ["--prefix", path.join(env, "tools"), "tsx", lsc] };
+  }
+  return { cmd: "lsc", pre: [] };
+}
 
 export function extractModule(absFile: string): RawModule {
-  if (!existsSync(LSC)) {
-    throw new Error(`LemmaScript not found at ${LS} — set LEMMASCRIPT=<path>`);
-  }
-  const json = execFileSync(
-    "npx",
-    ["--prefix", path.join(LS, "tools"), "tsx", LSC, "extract", absFile],
-    { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 },
-  );
+  const { cmd, pre } = lscInvocation();
+  const json = execFileSync(cmd, [...pre, "extract", absFile], {
+    encoding: "utf8",
+    maxBuffer: 256 * 1024 * 1024,
+  });
   return JSON.parse(json) as RawModule;
 }
