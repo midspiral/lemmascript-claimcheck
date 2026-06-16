@@ -11,9 +11,9 @@ LemmaScript proves the formal spec; it can't prove the spec *means* what you thi
 export function clamp(x: number, lo: number, hi: number): number { ... }
 ```
 
-`lemmascript-claimcheck` informalizes the `requires`/`ensures` **blind** (without seeing the `//@ contract`) via the sibling [claimcheck](../claimcheck) round-trip, then compares the back-translation to the contract. A mismatch means your proof guarantees something other than what your prose advertises — or vice versa.
+`lemmascript-claimcheck` informalizes the `requires`/`ensures` **blind** (without seeing the `//@ contract`) via the sibling [claimcheck](https://github.com/metareflection/claimcheck) round-trip, then compares the back-translation to the contract. A mismatch means your proof guarantees something other than what your prose advertises — or vice versa.
 
-It is a downstream consumer of LemmaScript's frontend, like [lemmascript-guard](../lemmascript-guard): it shells the public `lsc extract` for the Raw IR (now carrying `//@ contract` strings) and shells `claimcheck --stdin` for the round-trip. Expects sibling `../LemmaScript` and `../claimcheck` checkouts (or `$LEMMASCRIPT`, `$CLAIMCHECK`).
+It is a downstream consumer of LemmaScript's frontend, like other plugins: it shells the public `lsc extract` for the Raw IR (now carrying `//@ contract` strings) and shells `claimcheck --stdin` for the round-trip. Expects sibling `../LemmaScript` and `../claimcheck` checkouts (or `$LEMMASCRIPT`, `$CLAIMCHECK`).
 
 ## Usage
 
