@@ -1,0 +1,4 @@
+node_modules/
+# LemmaScript verification byproducts (regenerable via `lsc check`)
+*.dfy
+*.dfy.gen
