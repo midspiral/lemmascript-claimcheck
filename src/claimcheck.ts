@@ -44,10 +44,11 @@ function resolveCmd(): { cmd: string; pre: string[] } {
   return env.endsWith(".js") ? { cmd: "node", pre: [env] } : { cmd: env, pre: [] };
 }
 
-/** Backend/model flags from $CLAIMCHECK_ARGS, then CLI passthrough (CLI wins). */
+/** `--lang lemmascript` (the formal side is a function contract, not a Dafny lemma),
+ *  then $CLAIMCHECK_ARGS, then CLI passthrough — later wins, so either can override. */
 export function claimcheckArgs(passthrough: string[] = []): string[] {
   const envArgs = (process.env.CLAIMCHECK_ARGS ?? "").split(/\s+/).filter(Boolean);
-  return ["--stdin", ...envArgs, ...passthrough];
+  return ["--stdin", "--lang", "lemmascript", ...envArgs, ...passthrough];
 }
 
 export function runClaimcheck(claims: Claim[], domain: string, passthrough: string[] = []): CCResult[] {

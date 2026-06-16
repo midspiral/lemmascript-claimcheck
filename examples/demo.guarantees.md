@@ -30,7 +30,7 @@ clamp(x: number, lo: number, hi: number): number
 
 **Returns the larger of a and b.** — `largest`
 - Weakening: weakened-postcondition
-- Discrepancy: The requirement says the function returns the larger of a and b, which means the result must be >= a AND >= b (i.e., it is at least as large as both inputs). The lemma only ensures result >= a, completely omitting the condition result >= b. Furthermore, 'the larger of a and b' implies the result equals max(a, b), not merely some value >= a. The lemma is far too weak.
+- Discrepancy: The requirement says the function returns the LARGER of a and b, meaning the result must be >= a AND >= b (i.e., result = max(a, b)). The contract only ensures result >= a, completely omitting the constraint that result >= b. A value could satisfy the postcondition while being less than b, meaning it is not necessarily the larger of the two values.
 - Back-translation: The largest function takes two numbers (a, b) and returns a number that is greater than or equal to a.
 ```
 largest(a: number, b: number): number
