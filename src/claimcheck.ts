@@ -4,13 +4,16 @@
 // --single-prompt, ...).
 //
 // Configuration, lowest to highest precedence:
-//   (default)         shell `claimcheck` from PATH (install with `npm i -g claimcheck`).
+//   (default)         run our own `claimcheck` dependency (resolved from the tree;
+//                     falls back to `claimcheck` on PATH for claimcheck < 0.5.2,
+//                     which doesn't export its CLI entry).
 //   $CLAIMCHECK       override: a command on PATH, or a path to a dev checkout's
 //                     bin/claimcheck.js (run via node).
 //   $CLAIMCHECK_ARGS  default flags, space-separated (a project's persistent
 //                     backend choice, e.g. "--bedrock" or "--claude-code").
 //   passthrough       per-invocation flags from the CLI (override the env default).
 import { execFileSync } from "child_process";
+import { createRequire } from "module";
 
 export interface Informalization {
   naturalLanguage?: string;
@@ -42,7 +45,11 @@ export interface Claim {
 function resolveCmd(): { cmd: string; pre: string[] } {
   const env = process.env.CLAIMCHECK;
   if (env) return env.endsWith(".js") ? { cmd: "node", pre: [env] } : { cmd: env, pre: [] };
-  return { cmd: "claimcheck", pre: [] };
+  try {
+    return { cmd: process.execPath, pre: [createRequire(import.meta.url).resolve("claimcheck/cli")] };
+  } catch {
+    return { cmd: "claimcheck", pre: [] };
+  }
 }
 
 /** `--lang lemmascript` (the formal side is a function contract, not a Dafny lemma),

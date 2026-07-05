@@ -13,16 +13,17 @@ export function clamp(x: number, lo: number, hi: number): number { ... }
 
 `lemmascript-claimcheck` informalizes the `requires`/`ensures` **blind** (without seeing the `//@ contract`) via the [claimcheck](https://github.com/metareflection/claimcheck) round-trip, then compares the back-translation to the contract. A mismatch means your proof guarantees something other than what your prose advertises — or vice versa.
 
-It orchestrates two CLIs: it shells `lsc extract` (LemmaScript's frontend, now carrying `//@ contract` strings) for the Raw IR, and `claimcheck --stdin` for the round-trip. Both are expected on your `PATH`.
+It orchestrates two CLIs: it shells `lsc extract` (LemmaScript's frontend, now carrying `//@ contract` strings, from your `PATH`) for the Raw IR, and `claimcheck --stdin` for the round-trip — claimcheck ships as a dependency and is resolved from the tree, with `PATH` as fallback.
 
 ## Install
 
 ```sh
-# the tool, plus the two CLIs it drives (lsc + claimcheck) — all on your PATH
-npm install -g lemmascript-claimcheck lemmascript claimcheck
+npm install -g lemmascript-claimcheck lemmascript   # claimcheck comes along as a dependency
 ```
 
-It needs `lemmascript >= 0.5.7` (introduces the `//@ contract` annotation) and `claimcheck >= 0.5.0` (the `--lang` framing) — declared as `peerDependencies`, so npm warns on a version mismatch.
+Or install the whole toolchain at once: `npm install -g lemmascript` (>= 0.5.10) includes this tool, exposed as `lsc claimcheck`.
+
+It needs `lemmascript >= 0.5.7` (introduces the `//@ contract` annotation) — a `peerDependency`, so npm warns on a mismatch — and brings its own `claimcheck >= 0.6.0` (exports the `./cli` entry) as a regular dependency.
 
 ## Usage
 
