@@ -12,7 +12,7 @@
 //
 // For `domain.ts` writes `domain.guarantees.json` + `domain.guarantees.md`
 // next to the source (or under --out).
-import { existsSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 import * as path from "path";
 import { extractModule } from "./extract.js";
 import { collectClaims } from "./claims.js";
@@ -75,6 +75,7 @@ const report = buildReport(file, backed, results, gaps, generated);
 const dir = outDir ?? path.dirname(abs);
 const jsonPath = path.join(dir, `${domain}.guarantees.json`);
 const mdPath = path.join(dir, `${domain}.guarantees.md`);
+mkdirSync(dir, { recursive: true });
 writeFileSync(jsonPath, JSON.stringify(report, null, 2) + "\n");
 writeFileSync(mdPath, renderMarkdown(report) + "\n");
 
