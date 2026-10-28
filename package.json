@@ -43,7 +43,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "claimcheck": "^0.6.0"
+    "claimcheck": "^0.6.1"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
